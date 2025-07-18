@@ -24,9 +24,9 @@ if send_WA:
     except Exception as e:
         st.error(f"Failed to send message: {e}")
         
-account_sid = "ACaf51957d3b2037a0d0f909424fe60970"
-auth_token = "6874df88f9d9bd378cb9530b7b5fced3"
-twilio_number = '+17856452753'
+account_sid = "__YOUR ACCOUNT SID__"
+auth_token = "__YOUR AUTH TOKEN__"
+twilio_number = '__YOUR TWILIO NUMBER__'
 
 st.title("SMS Sender App")
 st.write("Send text messages using Python + Twilio")
@@ -58,8 +58,8 @@ if st.button("Send SMS", key="SMS"):
 st.title("Mail Sender App")
 st.write("Send Mail using through SMTP")
 
-sendgrid_api = "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"  # ⚠️ Consider using st.secrets
-from_email = "vinodjijo12@gmail.com"
+sendgrid_api = "__YOUR SENDGRID API__"
+from_email = "__SENDER EMAIL__"
 to_emails = st.text_input("Enter receiver's email address")
 plain_text_content = st.text_area("Enter your message", key="mail")
 
