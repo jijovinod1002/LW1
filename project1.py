@@ -13,6 +13,7 @@ message = st.text_area("Enter your message in here")
 now = datetime.datetime.now()
 hour = st.number_input("Hour (24-hour format)", min_value=0, max_value=23, value=now.hour)
 minute = st.number_input("Minute (Disclaimer: Make sure to enter a time 2 minutes ahead of current time to avoid error)", min_value=0, max_value=59, value=(now.minute + 2) % 60)
+
 send_WA  = st.button("Send Message", key="WA")
 
 if send_WA:
@@ -23,9 +24,9 @@ if send_WA:
     except Exception as e:
         st.error(f"Failed to send message: {e}")
         
-account_sid = st.secrets("YOUR ACCOUNT SID")
-auth_token = st.secrets("YOUR AUTH TOKEN")
-twilio_number = st.secrets("YOUR TWILIO NUMBER")
+account_sid = "ACaf51957d3b2037a0d0f909424fe60970"
+auth_token = "6874df88f9d9bd378cb9530b7b5fced3"
+twilio_number = '+17856452753'
 
 st.title("SMS Sender App")
 st.write("Send text messages using Python + Twilio")
@@ -39,28 +40,47 @@ if st.button("Send SMS", key="SMS"):
         try:
             client = Client(account_sid, auth_token)
             account = client.api.accounts(account_sid).fetch()
-            st.success(f"✅ Authenticated: {account.friendly_name}")
+            st.success(f"Authenticated: {account.friendly_name}")
 
             message = client.messages.create(
                 body=message_body,
                 from_=twilio_number,
                 to=to_number
             )
-            st.success(f"✅ Message sent! SID: {message.sid}")
+            st.success(f"Message sent! SID: {message.sid}")
         except Exception as e:
-            st.error(f"❌ Error: {e}")
+            st.error(f"Error: {e}")
             if "21608" in str(e):
                 st.error("This number is not verified. Twilio trial accounts can only send messages to verified numbers.\n\n👉 Please verify the number at https://www.twilio.com/console/phone-numbers/verified or upgrade your account.")
             else:
-                st.warning(f"Error at {e}")
+                st.warning("Error at {e}")
+
+st.title("Phone Call App")
+st.write("Make a phone call using Twilio(again :/)")
+
+to_number = st.text_input("Enter the phone number to call (with country code)", "+91")
+message = st.text_area("Message to speak", "Hello, this is a call from Streamlit app!")
+
+if st.button("Make Call", key="call"):
+    try:
+        client = Client(account_sid, auth_token)
+
+        call = client.calls.create(
+            to=to_number,
+            from_=twilio_number,
+            twiml=f'<Response><Say>{message}</Say></Response>'
+        )
+
+        st.success(f"Call initiated! Call SID: {call.sid}")
+    except Exception as e:
+        st.error(f"Error: {e}")
 
 st.title("Mail Sender App")
 st.write("Send Mail using through SMTP")
 
-sendgrid_api = st.secrets("YOUR SENDGRID API")
-from_email = st.secrets("SENDER EMAIL")
+sendgrid_api = "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"  # ⚠️ Consider using st.secrets
+from_email = "vinodjijo12@gmail.com"
 to_emails = st.text_input("Enter receiver's email address")
-subject = st.text_input("Enter Email Subject", "Message from Streamlit App")
 plain_text_content = st.text_area("Enter your message", key="mail")
 
 def send_mail():
