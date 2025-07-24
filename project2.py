@@ -7,10 +7,11 @@ import tempfile
 
 st.set_page_config(layout="centered", page_title="Instagram Post Maker")
 
-st.title("✨ Instagram Post Maker ✨")
+st.title("Instagram Post Maker ✨")
 st.markdown("---")
 
 st.info("⚠ *Important:* This application uses the instabot library, which simulates browser actions. Using automated tools may go against Instagram's terms of service and could lead to temporary or permanent account restrictions. Use responsibly!")
+st.info("Also make sure you have python v3.12 or any earlier versions along with the rest of the required libraries which are streamlit, pillow and instabot")
 
 st.subheader("Login Credentials")
 user = st.text_input("Enter your Instagram username:", key="username_input")
