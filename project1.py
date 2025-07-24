@@ -13,7 +13,6 @@ message = st.text_area("Enter your message in here")
 now = datetime.datetime.now()
 hour = st.number_input("Hour (24-hour format)", min_value=0, max_value=23, value=now.hour)
 minute = st.number_input("Minute (Disclaimer: Make sure to enter a time 2 minutes ahead of current time to avoid error)", min_value=0, max_value=59, value=(now.minute + 2) % 60)
-
 send_WA  = st.button("Send Message", key="WA")
 
 if send_WA:
@@ -24,9 +23,9 @@ if send_WA:
     except Exception as e:
         st.error(f"Failed to send message: {e}")
         
-account_sid = "__YOUR ACCOUNT SID__"
-auth_token = "__YOUR AUTH TOKEN__"
-twilio_number = '__YOUR TWILIO NUMBER__'
+account_sid = st.secrets("YOUR ACCOUNT SID")
+auth_token = st.secrets("YOUR AUTH TOKEN")
+twilio_number = st.secrets("YOUR TWILIO NUMBER")
 
 st.title("SMS Sender App")
 st.write("Send text messages using Python + Twilio")
@@ -53,14 +52,15 @@ if st.button("Send SMS", key="SMS"):
             if "21608" in str(e):
                 st.error("This number is not verified. Twilio trial accounts can only send messages to verified numbers.\n\n👉 Please verify the number at https://www.twilio.com/console/phone-numbers/verified or upgrade your account.")
             else:
-                st.warning("Error at {e}")
+                st.warning(f"Error at {e}")
 
 st.title("Mail Sender App")
 st.write("Send Mail using through SMTP")
 
-sendgrid_api = "__YOUR SENDGRID API__"
-from_email = "__SENDER EMAIL__"
+sendgrid_api = st.secrets("YOUR SENDGRID API")
+from_email = st.secrets("SENDER EMAIL")
 to_emails = st.text_input("Enter receiver's email address")
+subject = st.text_input("Enter Email Subject", "Message from Streamlit App")
 plain_text_content = st.text_area("Enter your message", key="mail")
 
 def send_mail():
@@ -74,11 +74,11 @@ def send_mail():
         sg = SendGridAPIClient(sendgrid_api)
         response = sg.send(email)
         if response.status_code == 202:
-            st.success("✅ Email sent successfully!")
+            st.success("Email sent successfully!")
         else:
-            st.error(f"❌ Failed to send email, status code: {response.status_code}")
+            st.error(f"Failed to send email, status code: {response.status_code}")
     except Exception as e:
-        st.error(f"❌ Failed to send Email: {e}")
+        st.error(f"Failed to send Email: {e}")
 
 if st.button("Send Mail", key="mail1"):
     if sendgrid_api and from_email and to_emails and plain_text_content:
